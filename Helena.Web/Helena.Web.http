@@ -1,0 +1,6 @@
+@Helena.Web_HostAddress = http://localhost:5195
+
+GET {{Helena.Web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
