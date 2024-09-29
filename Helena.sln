@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helena.Infra", "Helena.Infr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helena.UseCases", "Helena.UseCases\Helena.UseCases.csproj", "{0BBC975B-1364-497B-9330-97C9676AD986}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helena.Test", "Helena.Test\Helena.Test.csproj", "{18AE8374-2981-4C00-8B91-140BA5C33006}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{0BBC975B-1364-497B-9330-97C9676AD986}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BBC975B-1364-497B-9330-97C9676AD986}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BBC975B-1364-497B-9330-97C9676AD986}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18AE8374-2981-4C00-8B91-140BA5C33006}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18AE8374-2981-4C00-8B91-140BA5C33006}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18AE8374-2981-4C00-8B91-140BA5C33006}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18AE8374-2981-4C00-8B91-140BA5C33006}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
