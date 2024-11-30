@@ -9,84 +9,72 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Helena.Web.Migrations
+namespace Infra.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20241023234941_2ndMigration")]
-    partial class _2ndMigration
+    [Migration("20241130105501_First")]
+    partial class First
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Helena.Core.Entities.AppUser", b =>
+            modelBuilder.Entity("Domain.Entities.AppUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
+                    b.Property<DateOnly>("BirthDate")
+                        .HasColumnType("date");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("text");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("EmailConfirmed")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
+                    b.Property<DateTime>("LastUpdateAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("LastUpdatetBy")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("text");
-
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PhoneNumber")
+                    b.Property<string>("PasswordSalt")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("text");
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Helena.Core.Entities.Doctor", b =>
+            modelBuilder.Entity("Domain.Entities.Doctor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,7 +118,7 @@ namespace Helena.Web.Migrations
                     b.ToTable("Doctors");
                 });
 
-            modelBuilder.Entity("Helena.Core.Entities.Medication", b =>
+            modelBuilder.Entity("Domain.Entities.Medication", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -199,7 +187,7 @@ namespace Helena.Web.Migrations
                     b.ToTable("Medications");
                 });
 
-            modelBuilder.Entity("Helena.Core.Entities.Times", b =>
+            modelBuilder.Entity("Domain.Entities.Times", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -221,9 +209,9 @@ namespace Helena.Web.Migrations
                     b.ToTable("Times");
                 });
 
-            modelBuilder.Entity("Helena.Core.Entities.Doctor", b =>
+            modelBuilder.Entity("Domain.Entities.Doctor", b =>
                 {
-                    b.HasOne("Helena.Core.Entities.AppUser", "User")
+                    b.HasOne("Domain.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -232,15 +220,15 @@ namespace Helena.Web.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Helena.Core.Entities.Medication", b =>
+            modelBuilder.Entity("Domain.Entities.Medication", b =>
                 {
-                    b.HasOne("Helena.Core.Entities.Doctor", "Doctor")
+                    b.HasOne("Domain.Entities.Doctor", "Doctor")
                         .WithMany()
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Helena.Core.Entities.AppUser", "User")
+                    b.HasOne("Domain.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -251,9 +239,9 @@ namespace Helena.Web.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Helena.Core.Entities.Times", b =>
+            modelBuilder.Entity("Domain.Entities.Times", b =>
                 {
-                    b.HasOne("Helena.Core.Entities.Medication", "Medication")
+                    b.HasOne("Domain.Entities.Medication", "Medication")
                         .WithMany()
                         .HasForeignKey("MedicationId")
                         .OnDelete(DeleteBehavior.Cascade)

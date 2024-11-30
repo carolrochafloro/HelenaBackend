@@ -26,8 +26,8 @@ public class AppUserController : ControllerBase
 
         AppUser user = new()
         {
+
             Email = register.Email,
-            SecurityStamp = Guid.NewGuid().ToString(),
             Name = register.Name,
             LastName = register.LastName,
         };

@@ -4,11 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Contracts.Enum;
-public enum FrequencyType
+namespace Domain.Interfaces.Business;
+public interface IAppUserBusiness
 {
-    Daily = 1,
-    Weekly = 2,
-    Monthly = 3,
-    Yearly = 4
 }

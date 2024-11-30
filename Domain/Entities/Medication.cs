@@ -19,7 +19,7 @@ public class Medication : BaseEntity
     public string Img { get; set; }
     public DateOnly StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    public FrequencyType FrequencyType { get; set; }
+    public FrequencyTypeEnum FrequencyType { get; set; }
     public int Recurrency { get; set; }
 
     [JsonIgnore]
