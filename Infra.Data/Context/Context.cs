@@ -18,4 +18,10 @@ public class Context : DbContext
     public DbSet<Doctor> Doctors { get; set; }
     public DbSet<Medication> Medications { get; set; }
     public DbSet<Times> Times { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+    }
 }
+

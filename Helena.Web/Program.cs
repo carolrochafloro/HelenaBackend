@@ -1,7 +1,9 @@
 using Domain.Business;
 using Domain.Entities;
 using Domain.Interfaces.Business;
+using Domain.Interfaces.Data;
 using Helena.Web.Data.Context;
+using Infra.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +20,8 @@ builder.Services.AddDbContext<Context>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Infra.Data"));
 });
 
-builder.Services.AddSingleton<IAppUserBusiness, AppUserBusiness>();
+builder.Services.AddScoped<IAppUserBusiness, AppUserBusiness>();
+builder.Services.AddScoped<IAppUserData, AppUserData>();
 
 var app = builder.Build();
 

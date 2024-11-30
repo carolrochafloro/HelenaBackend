@@ -47,7 +47,7 @@ public class AppUserData : IAppUserData
     }
 
 
-    public async Task<AppUser?> GetUserAsync(string email)
+    public AppUser? GetUser(string email)
     {
 
         _logger.LogInformation($"Buscando usuário pelo e-mail {email}");
@@ -55,7 +55,7 @@ public class AppUserData : IAppUserData
         try
         {
 
-            var user = await _context.Set<AppUser>(email).FirstOrDefaultAsync();
+            var user = _context.Set<AppUser>().FirstOrDefault(u => u.Email == email);
 
             if (user is null)
             {
@@ -79,7 +79,7 @@ public class AppUserData : IAppUserData
 
         try
         {
-            var user = await GetUserAsync(email);
+            var user =  GetUser(email);
 
             if (user is null)
             {

@@ -18,4 +18,7 @@ public class RegisterDTO
     [Required(ErrorMessage = "A senha é obrigatória.")]
     public string Password { get; set; }
 
+    [Required(ErrorMessage = "A data de nascimento é obrigatória.")]
+    public DateOnly BirthDate { get; set; }
+
 }

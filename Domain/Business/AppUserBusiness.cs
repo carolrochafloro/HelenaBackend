@@ -21,6 +21,7 @@ public class AppUserBusiness : IAppUserBusiness
 
         return computedHashString.Equals(hash);
     }
+
     public string HashPassword(string password, string salt)
     {
 
@@ -41,4 +42,6 @@ public class AppUserBusiness : IAppUserBusiness
 
         return Convert.ToBase64String(salt);
     }
+
+
 }
