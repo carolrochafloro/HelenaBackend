@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 
-namespace Helena.Core.Entities;
+
+namespace Domain.Entities;
 public class AppUser : IdentityUser<Guid>
 {
     public string Name { get; set; } = string.Empty;

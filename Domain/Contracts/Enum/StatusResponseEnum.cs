@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Helena.Core.Enum;
-public enum FrequencyType
+namespace Domain.Contracts.Enum;
+public enum StatusResponseEnum
 {
-    Daily = 1,
-    Weekly = 2,
-    Monthly = 3,
-    Yearly = 4
+    Success,
+    Error
 }

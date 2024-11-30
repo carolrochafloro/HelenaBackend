@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace Helena.Core.Entities;
+namespace Domain.Entities;
 public class Doctor : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
@@ -13,6 +15,8 @@ public class Doctor : BaseEntity
     public string Email { get; set; } = string.Empty;
 
     [JsonIgnore]
-    public Guid UserId { get; set; }
+    [Required]
+    [ForeignKey("UserId")]
+    public AppUser User { get; set; }
 
 }
