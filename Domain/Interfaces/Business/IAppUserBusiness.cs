@@ -7,4 +7,7 @@ using System.Threading.Tasks;
 namespace Domain.Interfaces.Business;
 public interface IAppUserBusiness
 {
+    bool IsValidPassword(string password, string salt, string hash);
+    string HashPassword(string password, string salt);
+    string SaltGenerator();
 }
