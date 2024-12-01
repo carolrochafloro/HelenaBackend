@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Helena.Web.Core.DTO;
+namespace Domain.Contracts.DTO.AppUser;
 
 public class RegisterDTO
 {
-    [Required(ErrorMessage ="O nome é obrigatório.")]
+    [Required(ErrorMessage = "O nome é obrigatório.")]
     public string Name { get; set; }
 
     [Required(ErrorMessage = "O sobrenome é obrigatório.")]

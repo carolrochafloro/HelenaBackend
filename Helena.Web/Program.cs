@@ -4,12 +4,35 @@ using Domain.Interfaces.Business;
 using Domain.Interfaces.Data;
 using Helena.Web.Data.Context;
 using Infra.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "HelenaApp",
+        ValidAudience = "HelenaApp",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("hardCodedKeyForNow1234567890!_testeeeee"))
+    };
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -22,6 +45,8 @@ builder.Services.AddDbContext<Context>(options =>
 
 builder.Services.AddScoped<IAppUserBusiness, AppUserBusiness>();
 builder.Services.AddScoped<IAppUserData, AppUserData>();
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -37,6 +62,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseCookiePolicy();
 
 app.MapControllers();
 

@@ -22,13 +22,17 @@ public class Medication : BaseEntity
     public FrequencyTypeEnum FrequencyType { get; set; }
     public int Recurrency { get; set; }
 
-    [JsonIgnore]
     [Required]
-    [ForeignKey("DoctorId")]
+    [ForeignKey("Id")]
+    public Guid UserId { get; set; }
+
+    [Required]
+    [ForeignKey("Id")]
+    public Guid DoctorId { get; set; }
+
+    [JsonIgnore]
     public Doctor Doctor { get; set; }
 
     [JsonIgnore]
-    [Required]
-    [ForeignKey("UserId")]
     public AppUser User { get; set; }
 }

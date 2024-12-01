@@ -10,7 +10,7 @@ namespace Domain.Interfaces.Data;
 public interface IDoctorData
 {
     Task<ResponseDTO> CreateDoctorAsync(Doctor doctor);
-    Doctor Getdoctor(Guid id);
+    List<Doctor>? GetDoctors(Guid id);
     Task<ResponseDTO> UpdateDoctorAsync(Guid id);
     Task<ResponseDTO> DeleteDoctorAsync(Guid id);
 }

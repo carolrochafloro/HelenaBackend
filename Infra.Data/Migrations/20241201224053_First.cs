@@ -24,8 +24,8 @@ namespace Infra.Data.Migrations
                     BirthDate = table.Column<DateOnly>(type: "date", nullable: false),
                     Role = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LastUpdateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LastUpdatetBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -44,8 +44,8 @@ namespace Infra.Data.Migrations
                     Email = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LastUpdateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LastUpdatetBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -74,11 +74,11 @@ namespace Infra.Data.Migrations
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     FrequencyType = table.Column<int>(type: "integer", nullable: false),
                     Recurrency = table.Column<int>(type: "integer", nullable: false),
-                    DoctorId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DoctorId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LastUpdateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LastUpdatetBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>

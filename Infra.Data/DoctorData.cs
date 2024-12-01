@@ -13,7 +13,7 @@ namespace Infra.Data;
 public class DoctorData : IDoctorData
 {
     private readonly Context _context;
-    private ILogger<DoctorData> _logger;    
+    private ILogger<DoctorData> _logger;
 
     public DoctorData(Context context,
                       ILogger<DoctorData> logger)
@@ -22,9 +22,31 @@ public class DoctorData : IDoctorData
         _logger = logger;
     }
 
-    public Task<ResponseDTO> CreateDoctorAsync(Doctor doctor)
+    public async Task<ResponseDTO> CreateDoctorAsync(Doctor doctor)
     {
-        
+        _logger.LogInformation($"Cadastrando médico {doctor.Name}");
+
+        try
+        {
+            await _context.AddAsync(doctor);
+            await _context.SaveChangesAsync();
+
+            return new ResponseDTO
+            {
+                Status = Domain.Contracts.Enum.StatusResponseEnum.Success,
+                Message = "Médico cadastrado com sucesso."
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Erro ao cadastrar médico: {ex.Message}");
+            return new ResponseDTO
+            {
+                Status = Domain.Contracts.Enum.StatusResponseEnum.Error,
+                Message = ex.Message
+            };
+        }
+
     }
 
     public Task<ResponseDTO> DeleteDoctorAsync(Guid id)
@@ -32,9 +54,20 @@ public class DoctorData : IDoctorData
         throw new NotImplementedException();
     }
 
-    public Doctor Getdoctor(Guid id)
+    public List<Doctor>? GetDoctors(Guid id)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation($"Buscando médicos do usuário {id}");
+
+        try
+        {
+            var doctors = _context.Set<Doctor>().Where(d => d.UserId == id).ToList();
+            return doctors;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Erro ao buscar médicos: {ex.Message}");
+            return null;
+        }
     }
 
     public Task<ResponseDTO> UpdateDoctorAsync(Guid id)

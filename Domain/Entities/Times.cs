@@ -15,9 +15,11 @@ public class Times
     public DateTime DateTime { get; set; }
     public bool IsTaken { get; set; }
 
-    [JsonIgnore]
     [Required]
-    [ForeignKey("MedicationId")]
+    [ForeignKey("Id")]
+    public Guid MedicationId { get; set; }
+
+    [JsonIgnore]
     public Medication Medication { get; set; }
 
 }

@@ -1,10 +1,10 @@
 ﻿
 using Domain.Contracts.DTO;
+using Domain.Contracts.DTO.AppUser;
 using Domain.Contracts.Enum;
 using Domain.Entities;
 using Domain.Interfaces.Business;
 using Domain.Interfaces.Data;
-using Helena.Web.Core.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -63,26 +63,29 @@ public class AppUserController : ControllerBase
 
     [Route("login")]
     [HttpPost]
-    
-    public async Task<IActionResult> Login([FromBody] LoginDTO login)
+
+    public IActionResult Login([FromBody] LoginDTO login)
     {
-        var user = _appUserData.GetUser(login.Email);
 
-        if (user is null)
+        var result = _appUserBusiness.Authenticate(login);
+
+        if (result.Item1.Status == StatusResponseEnum.Error)
         {
-            return Ok(new ResponseDTO { Status = StatusResponseEnum.Error, Message = "Usuário não registrado" });
+            return Unauthorized("Usuário não autorizado.");
         }
 
-        bool validPassword = _appUserBusiness.IsValidPassword(login.Password, user.PasswordSalt, user.PasswordHash);
-
-        if (!validPassword)
+        if (result.Item1 is null || result.Item2 is null)
         {
-            return Ok(new ResponseDTO { Status = StatusResponseEnum.Error, Message = "Usuário ou senha estão incorretos." });
+            return BadRequest("Erro do servidor");
         }
 
-        // gerar cookie 
+        var jwt = _appUserBusiness.GenerateJwt(result.Item2);
 
-        return Ok();
+        return Ok(new JwtDTO
+        {
+            Token = jwt,
+            Message = result.Item1.Message,
+        });
     }
 
 }

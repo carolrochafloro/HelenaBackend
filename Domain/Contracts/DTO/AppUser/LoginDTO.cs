@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Helena.Web.Core.DTO;
+namespace Domain.Contracts.DTO.AppUser;
 
 public class LoginDTO
 {

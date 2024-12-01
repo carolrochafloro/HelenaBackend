@@ -14,9 +14,11 @@ public class Doctor : BaseEntity
     public string Phone { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
 
-    [JsonIgnore]
     [Required]
-    [ForeignKey("UserId")]
+    [ForeignKey("Id")]
+    public Guid UserId { get; set; }
+
+    [JsonIgnore]
     public AppUser User { get; set; }
 
 }
