@@ -22,31 +22,63 @@ namespace Helena.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateDoctor(NewDoctorDTO newDoctor)
         {
-            if (newDoctor is null)
+            try
             {
-                return BadRequest("Os dados do médico devem ser enviados.");
+                if (newDoctor is null)
+                {
+                    return BadRequest("Os dados do médico devem ser enviados.");
+                }
+
+                var doctor = new Doctor
+                {
+                    Name = newDoctor.Name,
+                    Specialty = newDoctor.Specialty,
+                    Phone = newDoctor.Phone,
+                    Email = newDoctor.Email,
+                };
+
+                var result = await _doctorData.CreateDoctorAsync(doctor);
+
+                return Ok(result);
             }
-
-            var doctor = new Doctor
+            catch (Exception ex)
             {
-                Name = newDoctor.Name,
-                Specialty = newDoctor.Specialty,
-                Phone = newDoctor.Phone,
-                Email = newDoctor.Email,
-            };
-
-            var result = await _doctorData.CreateDoctorAsync(doctor);
-
-            return Ok(result);
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         [Route("getdoctors")]
         [HttpGet]
-        public IActionResult GetDoctors()
+        public IActionResult GetDoctors([FromQuery] Guid userId)
+
         {
+            try
+            {
+                var doctors = _doctorData.GetDoctors(userId);
+                return Ok(doctors);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-            return Ok();
 
+        }
+
+        [Route("getdoctors/{doctorId}")]
+        [HttpGet]
+        public IActionResult GetDoctorById([FromRoute] Guid doctorId)
+        {
+            try
+            {
+                var doctor = _doctorData.GetDoctorById(doctorId);
+                return Ok(doctor);
+
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 

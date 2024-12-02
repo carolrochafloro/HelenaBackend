@@ -11,6 +11,7 @@ public interface IDoctorData
 {
     Task<ResponseDTO> CreateDoctorAsync(Doctor doctor);
     List<Doctor>? GetDoctors(Guid id);
+    Doctor? GetDoctorById(Guid id);
     Task<ResponseDTO> UpdateDoctorAsync(Guid id);
     Task<ResponseDTO> DeleteDoctorAsync(Guid id);
 }

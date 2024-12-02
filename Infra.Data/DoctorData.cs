@@ -70,6 +70,25 @@ public class DoctorData : IDoctorData
         }
     }
 
+    public Doctor? GetDoctorById(Guid id)
+    {
+        _logger.LogInformation($"Buscando médico com id {id}");
+
+        try
+        {
+            var doctor = _context.Set<Doctor>().Where(d => d.Id == id).FirstOrDefault();
+
+            return doctor;
+
+        }
+        catch (Exception ex)
+        {
+
+            _logger.LogError($"Erro ao buscar médico: {ex.Message}");
+            return null;
+        }
+    }
+
     public Task<ResponseDTO> UpdateDoctorAsync(Guid id)
     {
         throw new NotImplementedException();
