@@ -5,7 +5,10 @@ using Domain.Contracts.Enum;
 using Domain.Entities;
 using Domain.Interfaces.Business;
 using Domain.Interfaces.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 
 namespace Helena.Web.Controllers;
@@ -87,5 +90,32 @@ public class AppUserController : ControllerBase
             Message = result.Item1.Message,
         });
     }
+
+    [Route("getprofile")]
+    [HttpGet]
+    [Authorize]
+    public IActionResult GetLoggedUser()
+    {
+        var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        Guid.TryParse(userIdString, out Guid userId);
+
+        try
+        {
+            var user = _appUserData.GetUserById(userId);
+
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
 
 }

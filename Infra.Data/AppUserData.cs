@@ -47,10 +47,33 @@ public class AppUserData : IAppUserData
     }
 
 
-    public AppUser? GetUser(string email)
+    public AppUser? GetUserById(Guid id)
     {
 
-        _logger.LogInformation($"Buscando usuário pelo e-mail {email}");
+        _logger.LogInformation($"Buscando usuário pelo id {id}");
+
+        try
+        {
+
+            var user = _context.Set<AppUser>().FirstOrDefault(u => u.Id == id);
+
+            if (user is null)
+            {
+                return null;
+            }
+
+            return user;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return null;
+        }
+
+    }
+
+    public AppUser? GetUser(string email)
+    {
 
         try
         {
@@ -72,21 +95,22 @@ public class AppUserData : IAppUserData
 
     }
 
-    public async Task<ResponseDTO> DeleteUserAsync(string email)
+
+    public async Task<ResponseDTO> DeleteUserAsync(Guid id)
     {
 
-        _logger.LogInformation($"Deletando usuário {email}");
+        _logger.LogInformation($"Deletando usuário {id}");
 
         try
         {
-            var user =  GetUser(email);
+            var user =  GetUserById(id);
 
             if (user is null)
             {
                 return new ResponseDTO
                 {
                     Status = StatusResponseEnum.Error,
-                    Message = $"Usuário com e-mail {email} não encontrado."
+                    Message = $"Usuário com id {id} não encontrado."
                 };
             }
 
@@ -98,7 +122,7 @@ public class AppUserData : IAppUserData
             return new ResponseDTO
             {
                 Status = StatusResponseEnum.Success,
-                Message = $"Usuário com e-mail {email} deletado."
+                Message = $"Usuário com id {id} deletado."
             };
         }
         catch (Exception ex)

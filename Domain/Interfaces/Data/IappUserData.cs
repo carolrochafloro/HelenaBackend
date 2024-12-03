@@ -10,5 +10,8 @@ namespace Domain.Interfaces.Data;
 public interface IAppUserData
 {
     Task<ResponseDTO> CreateUserAsync(AppUser user);
+    AppUser? GetUserById(Guid id);
     AppUser? GetUser(string email);
+    Task<ResponseDTO> DeleteUserAsync(Guid id);
+
 }
