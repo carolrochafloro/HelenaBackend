@@ -49,10 +49,42 @@ public class DoctorData : IDoctorData
 
     }
 
-    public Task<ResponseDTO> DeleteDoctorAsync(Guid id)
+    public async Task<ResponseDTO> DeleteDoctorAsync(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var doctor = _context.Set<Doctor>().Where(d => d.Id == id).FirstOrDefault();
+
+            if (doctor is null)
+            {
+                return new ResponseDTO
+                {
+                    Status = Domain.Contracts.Enum.StatusResponseEnum.Error,
+                    Message = "Médico não encontrado"
+                };
+            }
+
+            _context.Set<Doctor>().Remove(doctor);
+            await _context.SaveChangesAsync();
+
+            return new ResponseDTO
+            {
+                Status = Domain.Contracts.Enum.StatusResponseEnum.Success,
+                Message = "Médico removido com sucesso."
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (ex) here if necessary
+
+            return new ResponseDTO
+            {
+                Status = Domain.Contracts.Enum.StatusResponseEnum.Error,
+                Message = "Ocorreu um erro ao tentar remover o médico."
+            };
+        }
     }
+
 
     public List<Doctor>? GetDoctors(Guid id)
     {
@@ -89,8 +121,45 @@ public class DoctorData : IDoctorData
         }
     }
 
-    public Task<ResponseDTO> UpdateDoctorAsync(Guid id)
+    public async Task<ResponseDTO> UpdateDoctorAsync(Guid id, NewDoctorDTO newdoctor)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var doctor = _context.Set<Doctor>().Where(d => d.Id == id).FirstOrDefault();
+
+            if (doctor is null)
+            {
+                return new ResponseDTO
+                {
+                    Status = Domain.Contracts.Enum.StatusResponseEnum.Error,
+                    Message = "Médico não encontrado"
+                };
+            }
+
+            doctor.Name = !string.IsNullOrEmpty(newdoctor.Name) ? newdoctor.Name : doctor.Name;
+            doctor.Specialty = !string.IsNullOrEmpty(newdoctor.Specialty) ? newdoctor.Specialty : doctor.Specialty;
+            doctor.Email = !string.IsNullOrEmpty(newdoctor.Email) ? newdoctor.Email : doctor.Email;
+            doctor.Phone = !string.IsNullOrEmpty(newdoctor.Phone) ? newdoctor.Phone : doctor.Phone;
+
+            await _context.SaveChangesAsync();
+
+            return new ResponseDTO
+            {
+                Status = Domain.Contracts.Enum.StatusResponseEnum.Success,
+                Message = "Cadastro do médico atualizado com sucesso."
+            };
+
+        }
+
+        catch (Exception ex)
+        {
+            _logger.LogError($"Erro ao buscar médico: {ex.Message}");
+            return new ResponseDTO
+            {
+                Status = Domain.Contracts.Enum.StatusResponseEnum.Error,
+                Message = ex.Message
+            };
+        }
+
     }
 }
