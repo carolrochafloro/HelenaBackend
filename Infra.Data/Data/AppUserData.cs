@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infra.Data;
+namespace Infra.Data.Data;
 public class AppUserData : IAppUserData
 {
     private readonly Context _context;
@@ -31,7 +31,7 @@ public class AppUserData : IAppUserData
 
         try
         {
-            await _context.AddAsync(user);
+            await _context.Set<AppUser>().AddAsync(user);
             await _context.SaveChangesAsync();
 
             return new ResponseDTO { Status = StatusResponseEnum.Success, Message = $"Usuário {user.Id} - {user.Email} criado com sucesso." };
@@ -103,7 +103,7 @@ public class AppUserData : IAppUserData
 
         try
         {
-            var user =  GetUserById(id);
+            var user = GetUserById(id);
 
             if (user is null)
             {

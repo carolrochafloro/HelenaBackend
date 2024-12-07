@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Interfaces.Business;
-public interface IDoctorBusiness
+namespace Domain.Contracts.DTO
 {
-
+    class MedicationWithDoctorDTO
+    {
+    }
 }

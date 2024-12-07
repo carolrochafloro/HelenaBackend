@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infra.Data;
+namespace Infra.Data.Data;
 public class DoctorData : IDoctorData
 {
     private readonly Context _context;
@@ -28,7 +28,7 @@ public class DoctorData : IDoctorData
 
         try
         {
-            await _context.AddAsync(doctor);
+            await _context.Set<Doctor>().AddAsync(doctor);
             await _context.SaveChangesAsync();
 
             return new ResponseDTO
@@ -40,11 +40,7 @@ public class DoctorData : IDoctorData
         catch (Exception ex)
         {
             _logger.LogError($"Erro ao cadastrar médico: {ex.Message}");
-            return new ResponseDTO
-            {
-                Status = Domain.Contracts.Enum.StatusResponseEnum.Error,
-                Message = ex.Message
-            };
+            throw;
         }
 
     }
@@ -75,13 +71,9 @@ public class DoctorData : IDoctorData
         }
         catch (Exception ex)
         {
-            // Log the exception (ex) here if necessary
 
-            return new ResponseDTO
-            {
-                Status = Domain.Contracts.Enum.StatusResponseEnum.Error,
-                Message = "Ocorreu um erro ao tentar remover o médico."
-            };
+            _logger.LogError($"Erro ao remover o cadastro do médico: {ex.Message}");
+            throw;
         }
     }
 
@@ -98,7 +90,7 @@ public class DoctorData : IDoctorData
         catch (Exception ex)
         {
             _logger.LogError($"Erro ao buscar médicos: {ex.Message}");
-            return null;
+            throw;
         }
     }
 
@@ -117,7 +109,7 @@ public class DoctorData : IDoctorData
         {
 
             _logger.LogError($"Erro ao buscar médico: {ex.Message}");
-            return null;
+            throw;
         }
     }
 
@@ -154,11 +146,7 @@ public class DoctorData : IDoctorData
         catch (Exception ex)
         {
             _logger.LogError($"Erro ao buscar médico: {ex.Message}");
-            return new ResponseDTO
-            {
-                Status = Domain.Contracts.Enum.StatusResponseEnum.Error,
-                Message = ex.Message
-            };
+            throw;
         }
 
     }

@@ -7,13 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helena.Web", "Helena.Web\He
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{39924168-9163-40DB-B491-6109AC18231B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infra.Data", "Infra.Data\Infra.Data.csproj", "{8772D445-8AFC-4E74-AE9D-3370B57B2466}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infra.Data", "Infra.Data\Infra.Data.csproj", "{8772D445-8AFC-4E74-AE9D-3370B57B2466}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{1B3436AB-E2D1-442F-B948-C208DB5C0552}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{11E11681-9A71-4F1D-8CEB-19EBD1757681}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{7AF1CCAF-AAC4-4B2F-AB6E-243F8AF4EA31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{7AF1CCAF-AAC4-4B2F-AB6E-243F8AF4EA31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helena.Tests", "Helena.Tests\Helena.Tests.csproj", "{4641E939-A415-4F51-B5FD-E84B18F716B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{7AF1CCAF-AAC4-4B2F-AB6E-243F8AF4EA31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AF1CCAF-AAC4-4B2F-AB6E-243F8AF4EA31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AF1CCAF-AAC4-4B2F-AB6E-243F8AF4EA31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4641E939-A415-4F51-B5FD-E84B18F716B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4641E939-A415-4F51-B5FD-E84B18F716B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4641E939-A415-4F51-B5FD-E84B18F716B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4641E939-A415-4F51-B5FD-E84B18F716B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

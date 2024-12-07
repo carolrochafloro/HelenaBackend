@@ -3,7 +3,7 @@ using Domain.Entities;
 using Domain.Interfaces.Business;
 using Domain.Interfaces.Data;
 using Helena.Web.Data.Context;
-using Infra.Data;
+using Infra.Data.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -45,6 +45,9 @@ builder.Services.AddDbContext<Context>(options =>
 
 builder.Services.AddScoped<IAppUserBusiness, AppUserBusiness>();
 builder.Services.AddScoped<IAppUserData, AppUserData>();
+builder.Services.AddScoped<IMedicationBusiness, MedicationBusiness>();
+builder.Services.AddScoped<ITimesBusiness, TimesBusiness>();
+
 
 builder.Services.AddAuthorization();
 

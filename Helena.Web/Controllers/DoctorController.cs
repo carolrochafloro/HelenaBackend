@@ -1,6 +1,6 @@
 ﻿using Domain.Contracts.DTO;
 using Domain.Entities;
-using Infra.Data;
+using Infra.Data.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +24,7 @@ namespace Helena.Web.Controllers
 
         [Route("create")]
         [HttpPost]
-        public async Task<IActionResult> CreateDoctor(NewDoctorDTO newDoctor)
+        public async Task<IActionResult> CreateDoctor([FromBody]NewDoctorDTO newDoctor)
         {
             var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             Guid.TryParse(userIdString, out Guid userId);
