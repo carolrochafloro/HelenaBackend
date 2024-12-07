@@ -1,4 +1,5 @@
 ﻿using Domain.Contracts.DTO;
+using Domain.Contracts.DTO.AppUser;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,6 @@ public interface IAppUserData
     AppUser? GetUserById(Guid id);
     AppUser? GetUser(string email);
     Task<ResponseDTO> DeleteUserAsync(Guid id);
+    Task<ResponseDTO> UpdateUserAsync(RegisterDTO user, Guid id);
 
 }

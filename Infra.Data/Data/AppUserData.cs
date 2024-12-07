@@ -1,4 +1,5 @@
 ﻿using Domain.Contracts.DTO;
+using Domain.Contracts.DTO.AppUser;
 using Domain.Contracts.Enum;
 using Domain.Entities;
 using Domain.Interfaces.Data;
@@ -45,7 +46,6 @@ public class AppUserData : IAppUserData
         }
 
     }
-
 
     public AppUser? GetUserById(Guid id)
     {
@@ -95,7 +95,6 @@ public class AppUserData : IAppUserData
 
     }
 
-
     public async Task<ResponseDTO> DeleteUserAsync(Guid id)
     {
 
@@ -136,5 +135,32 @@ public class AppUserData : IAppUserData
         }
 
 
+    }
+
+    public async Task<ResponseDTO> UpdateUserAsync(RegisterDTO user, Guid id)
+    {
+        try
+        {
+            var currentUser = await _context.Set<AppUser>().Where(u => u.Id == id).FirstOrDefaultAsync();
+
+            currentUser.Name = !string.IsNullOrEmpty(user.Name) ? user.Name : currentUser.Name;
+            currentUser.LastName = !string.IsNullOrEmpty(user.LastName) ? user.LastName : currentUser.LastName;
+            currentUser.Email = !string.IsNullOrEmpty(user.Email) ? user.Email : currentUser.Email;
+            currentUser.BirthDate = user.BirthDate != default ? user.BirthDate : currentUser.BirthDate;
+
+            await _context.SaveChangesAsync();
+
+            return new ResponseDTO
+            {
+                Status = StatusResponseEnum.Success,
+                Message = "Usuário atualizado com sucesso."
+            };
+
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            throw;
+        }
     }
 }

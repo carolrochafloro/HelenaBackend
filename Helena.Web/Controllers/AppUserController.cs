@@ -34,33 +34,41 @@ public class AppUserController : ControllerBase
 
     public async Task<IActionResult> Register([FromBody] RegisterDTO register)
     {
-
-        var user = _appUserData.GetUser(register.Email);
-
-        if (user is not null)
+        try
         {
-            return BadRequest("O e-mail já está registrado.");
+            var user = _appUserData.GetUser(register.Email);
+
+            if (user is not null)
+            {
+                return BadRequest("O e-mail já está registrado.");
+            }
+
+            var salt = _appUserBusiness.SaltGenerator();
+            var hash = _appUserBusiness.HashPassword(register.Password, salt);
+
+            AppUser newUser = new()
+            {
+
+                Email = register.Email,
+                Name = register.Name,
+                LastName = register.LastName,
+                PasswordSalt = salt,
+                PasswordHash = hash,
+                BirthDate = register.BirthDate
+            };
+
+            var save = await _appUserData.CreateUserAsync(newUser);
+
+            // salvar no db
+
+            return Ok(save.Message);
         }
 
-        var salt = _appUserBusiness.SaltGenerator();
-        var hash = _appUserBusiness.HashPassword(register.Password, salt);
-
-        AppUser newUser = new()
+        catch (Exception ex)
         {
+            return BadRequest(ex.Message);
+        }
 
-            Email = register.Email,
-            Name = register.Name,
-            LastName = register.LastName,
-            PasswordSalt = salt,
-            PasswordHash = hash,
-            BirthDate = register.BirthDate
-        };
-
-        var save = await _appUserData.CreateUserAsync(newUser);
-
-        // salvar no db
-
-        return Ok(new ResponseDTO { Status = StatusResponseEnum.Success, Message = "Usuário criado com sucesso." });
 
     }
 
@@ -111,11 +119,53 @@ public class AppUserController : ControllerBase
             return Ok(user);
 
         }
+
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }
     }
 
+    [HttpDelete]
+    [Authorize]
 
+    public async Task<IActionResult> DeleteProfile()
+    {
+        var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        Guid.TryParse(userIdString, out Guid userId);
+
+        try
+        {
+            var response = await _appUserData.DeleteUserAsync(userId);
+
+            return Ok(response.Message);
+        }
+
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
+    }
+
+    [HttpPut]
+    [Authorize]
+
+    public async Task<IActionResult> UpdateProfile([FromBody] RegisterDTO updateUser)
+    {
+        var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        Guid.TryParse(userIdString, out Guid userId);
+
+        try
+        {
+            var response = await _appUserData.UpdateUserAsync(updateUser, userId);
+            return Ok(response.Message);
+
+        }
+
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
