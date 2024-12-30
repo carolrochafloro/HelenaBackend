@@ -1,4 +1,5 @@
-﻿using Domain.Contracts.DTO;
+﻿using Domain.Contracts.DTO.Medication;
+using Domain.Contracts.DTO.Times;
 using Domain.Contracts.Enum;
 using Domain.Entities;
 using Domain.Interfaces.Business;
@@ -31,6 +32,10 @@ public class MedicationBusiness : IMedicationBusiness
 
     public async Task<Medication> CreateMedicationWithTimes(NewMedicationDTO newMedication, Guid userId)
     {
+        var result = Guid.TryParse(newMedication.DoctorId, out Guid doctorId);
+
+
+
         var medication = new Medication
         {
             Name = newMedication.Name,
@@ -38,11 +43,12 @@ public class MedicationBusiness : IMedicationBusiness
             Type = newMedication.Type,
             Dosage = newMedication.Dosage,
             Notes = newMedication.Notes,
-            StartDate = newMedication.StartDate,
-            EndDate = newMedication.EndDate,
+            StartDate = DateOnly.Parse(newMedication.Start),
+            EndDate = DateOnly.Parse(newMedication.End),
+            IndicatedFor = newMedication.IndicatedFor,
             FrequencyType = (FrequencyTypeEnum)newMedication.FrequencyType,
             Recurrency  = newMedication.Recurrency,
-            DoctorId = newMedication.DoctorId,
+            DoctorId = doctorId,
             UserId = userId
         };
 
@@ -70,11 +76,6 @@ public class MedicationBusiness : IMedicationBusiness
         }
 
         await _medData.CreateMedicationAsync(medication);
-
-        foreach (var time in timesToAdd)
-        {
-            await _timesData.CreateTimes(time);
-        }
 
         return medication;
     }

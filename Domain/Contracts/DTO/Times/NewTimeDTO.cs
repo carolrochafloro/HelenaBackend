@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Contracts.DTO;
+namespace Domain.Contracts.DTO.Times;
 public class NewTimeDTO
 {
     public List<int> WeekDay { get; set; }

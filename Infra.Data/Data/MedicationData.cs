@@ -1,4 +1,6 @@
 ﻿using Domain.Contracts.DTO;
+using Domain.Contracts.DTO.Medication;
+using Domain.Contracts.DTO.Times;
 using Domain.Entities;
 using Domain.Interfaces.Data;
 using Helena.Web.Data.Context;
@@ -52,7 +54,7 @@ public class MedicationData : IMedicationData
 
         try
         {
-            var medication = await _context.Set<Medication>().Where(m => m.Id == mediId).FirstOrDefaultAsync();
+            var medication = _context.Set<Medication>().Where(m => m.Id == mediId).FirstOrDefault();
             if (medication is null)
             {
                 return new ResponseDTO
@@ -78,13 +80,58 @@ public class MedicationData : IMedicationData
         }
     }
 
-    public List<Medication> GetAllMedications(Guid userId)
+    public List<MedicationWithDoctorDTO> GetAllMedications(Guid userId)
     {
         _logger.LogInformation($"Buscando medicamentos para o usuário {userId}");
+
         try
         {
-            var list = _context.Set<Medication>().Where(m => m.UserId == userId).ToList();
-            return list;
+            var query = from medication in _context.Medications
+                        where medication.UserId == userId
+                        join doctor in _context.Doctors on medication.DoctorId equals doctor.Id
+                        join time in _context.Times on medication.Id equals time.MedicationId
+                        group new { medication, doctor, time } by new
+                        {
+                            medication.Id,
+                            MedicationName = medication.Name,
+                            medication.Lab,
+                            medication.Type,
+                            medication.Dosage,
+                            medication.Notes,
+                            medication.StartDate,
+                            medication.EndDate,
+                            medication.FrequencyType,
+                            medication.Recurrency,
+                            DoctorName = doctor.Name,
+                            doctor.Specialty,
+                            medication.IndicatedFor
+                        } into g
+                        select new MedicationWithDoctorDTO
+                        {
+                            Id = g.Key.Id,
+                            Name = g.Key.MedicationName,
+                            Lab = g.Key.Lab,
+                            Type = g.Key.Type,
+                            Dosage = g.Key.Dosage,
+                            Notes = g.Key.Notes,
+                            Start = g.Key.StartDate,
+                            End = g.Key.EndDate,
+                            FrequencyType = g.Key.FrequencyType,
+                            Recurrency = g.Key.Recurrency,
+                            DoctorName = g.Key.DoctorName,
+                            DoctorSpecialty = g.Key.Specialty,
+                            IndicatedFor = g.Key.IndicatedFor,
+                            Times = g.Select(x => new TimeDTO
+                            {
+                                Id = x.time.Id,
+                                DateTime = x.time.DateTime,
+                                IsTaken = x.time.IsTaken,
+                            }).OrderBy(t => t.DateTime).ToList()
+                        };
+
+            var result = query.ToList();
+
+            return result;
 
         }
         catch (Exception ex)
@@ -94,14 +141,56 @@ public class MedicationData : IMedicationData
         }
     }
 
-    public Medication? GetMedicationById(Guid medId)
+    public MedicationWithDoctorDTO? GetMedicationById(Guid medId)
     {
         _logger.LogInformation($"Buscando medicamento: {medId}");
 
         try
         {
-            var medication = _context.Set<Medication>().Where(m => m.Id == medId).FirstOrDefault();
-            return medication;
+            var query = from medication in _context.Medications
+                        where medication.Id == medId
+                        join doctor in _context.Doctors on medication.DoctorId equals doctor.Id
+                        join time in _context.Times on medication.Id equals time.MedicationId
+                        group new { medication, doctor, time } by new
+                        {
+                            medication.Id,
+                            MedicationName = medication.Name,
+                            medication.Lab,
+                            medication.Type,
+                            medication.Dosage,
+                            medication.Notes,
+                            medication.StartDate,
+                            medication.EndDate,
+                            medication.FrequencyType,
+                            medication.Recurrency,
+                            DoctorName = doctor.Name,
+                            doctor.Specialty,
+                            medication.IndicatedFor
+                        } into g
+                        select new MedicationWithDoctorDTO
+                        {
+                            Id = g.Key.Id,
+                            Name = g.Key.MedicationName,
+                            Lab = g.Key.Lab,
+                            Type = g.Key.Type,
+                            Dosage = g.Key.Dosage,
+                            Notes = g.Key.Notes,
+                            Start = g.Key.StartDate,
+                            End = g.Key.EndDate,
+                            FrequencyType = g.Key.FrequencyType,
+                            Recurrency = g.Key.Recurrency,
+                            DoctorName = g.Key.DoctorName,
+                            DoctorSpecialty = g.Key.Specialty,
+                            IndicatedFor = g.Key.IndicatedFor,
+                            Times = g.Select(x => new TimeDTO
+                            {
+                                DateTime = x.time.DateTime,
+                                IsTaken = x.time.IsTaken,
+                            }).OrderBy(t => t.DateTime).ToList()
+                        };
+
+         
+            return query.FirstOrDefault();
         }
         catch (Exception ex)
         {
@@ -110,7 +199,7 @@ public class MedicationData : IMedicationData
         }
     }
 
-    public async Task<ResponseDTO> UpdateMedicationAsync(NewMedicationDTO medication, Guid medId)
+    public async Task<ResponseDTO> UpdateMedicationAsync(UpdateMedDTO medication, Guid medId)
     {
 
         _logger.LogInformation($"Atualizando medicamento {medication.Name}");
@@ -129,13 +218,12 @@ public class MedicationData : IMedicationData
                 };
             }
 
+            var result = Guid.TryParse(medication.DoctorId, out Guid doctorId);
+
             med.Name = !string.IsNullOrEmpty(medication.Name) ? medication.Name : med.Name;
-            med.StartDate = medication.StartDate != default ? medication.StartDate : med.StartDate;
             med.Dosage = !string.IsNullOrEmpty(medication.Dosage) ? medication.Dosage : med.Dosage;
-            med.EndDate = medication.EndDate != default ? medication.EndDate : med.EndDate;
-            med.Recurrency = med.Recurrency;
             med.IndicatedFor = !string.IsNullOrEmpty(medication.IndicatedFor) ? medication.IndicatedFor : med.IndicatedFor;
-            med.DoctorId = medication.DoctorId != default ? medication.DoctorId : med.DoctorId;
+            med.DoctorId = medication.DoctorId != default ?doctorId : med.DoctorId;
             med.Type = !string.IsNullOrEmpty(medication.Type) ? medication.Type : med.Type;
             med.Lab = !string.IsNullOrEmpty(medication.Lab) ? medication.Lab : med.Lab;
             med.Notes = !string.IsNullOrEmpty(medication.Notes) ? medication.Notes : med.Notes;
@@ -155,5 +243,31 @@ public class MedicationData : IMedicationData
             throw;
         }
 
+    }
+
+    public List<DayMedicationDTO> GetAllMedicationsByDate(DateOnly date, Guid userId)
+    {
+        _logger.LogInformation("Buscando medicamentos para o dashboard");
+
+        var medicationList = _context.Medications
+        .Where(m => m.UserId == userId && _context.Times.Any(t => t.MedicationId == m.Id && t.DateTime.Date == date.ToDateTime(TimeOnly.MinValue).ToUniversalTime().Date))
+        .Select(medication => new DayMedicationDTO
+        {
+            MedicationId = medication.Id,
+            Name = medication.Name,
+            Notes = medication.Notes,
+            Dosage = medication.Dosage,
+            Type = medication.Type,
+            Times = _context.Times
+                        .Where(t => t.MedicationId == medication.Id && t.DateTime.Date == date.ToDateTime(TimeOnly.MinValue).ToUniversalTime().Date).OrderBy(t => t.DateTime)
+                        .Select(t => new TimeDTO
+                        {
+                            Id = t.Id,
+                            DateTime = t.DateTime.ToLocalTime(),
+                            IsTaken = t.IsTaken
+                        }).ToList()
+        });
+
+        return medicationList.ToList();
     }
 }

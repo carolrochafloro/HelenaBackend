@@ -9,5 +9,5 @@ using System.Threading.Tasks;
 namespace Domain.Interfaces.Data;
 public interface ITimesData
 {
-    Task<ResponseDTO> CreateTimes(Times times);
+    Task<ResponseDTO> CreateTimesAsync(List<Times> times);
 }

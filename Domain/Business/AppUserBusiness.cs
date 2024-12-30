@@ -104,7 +104,8 @@ public class AppUserBusiness : IAppUserBusiness
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Name, user.Name)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("hardCodedKeyForNow1234567890!_testeeeee"));
@@ -114,7 +115,7 @@ public class AppUserBusiness : IAppUserBusiness
            issuer: "HelenaApp",
            audience: "HelenaApp",
            claims: claims,
-           expires: DateTime.Now.AddMinutes(30),
+           expires: DateTime.Now.AddDays(2),
            signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

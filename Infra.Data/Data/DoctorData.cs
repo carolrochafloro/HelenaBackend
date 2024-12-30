@@ -1,4 +1,5 @@
 ﻿using Domain.Contracts.DTO;
+using Domain.Contracts.DTO.Doctor;
 using Domain.Entities;
 using Domain.Interfaces.Data;
 using Helena.Web.Data.Context;
@@ -78,14 +79,29 @@ public class DoctorData : IDoctorData
     }
 
 
-    public List<Doctor>? GetDoctors(Guid id)
+    public List<ResponseDoctorDTO>? GetDoctors(Guid id)
     {
         _logger.LogInformation($"Buscando médicos do usuário {id}");
 
         try
         {
             var doctors = _context.Set<Doctor>().Where(d => d.UserId == id).ToList();
-            return doctors;
+            var doctorsDTO = new List<ResponseDoctorDTO>();
+            foreach ( var doctor in doctors)
+            {
+                var doctorDto = new ResponseDoctorDTO
+                {
+                    Id = doctor.Id,
+                    Name = doctor.Name,
+                    Contact = doctor.Contact,
+                    Specialty = doctor.Specialty,
+                    UserId = doctor.UserId,
+                };
+
+                doctorsDTO.Add(doctorDto);
+            }
+
+            return doctorsDTO;
         }
         catch (Exception ex)
         {
@@ -130,8 +146,7 @@ public class DoctorData : IDoctorData
 
             doctor.Name = !string.IsNullOrEmpty(newdoctor.Name) ? newdoctor.Name : doctor.Name;
             doctor.Specialty = !string.IsNullOrEmpty(newdoctor.Specialty) ? newdoctor.Specialty : doctor.Specialty;
-            doctor.Email = !string.IsNullOrEmpty(newdoctor.Email) ? newdoctor.Email : doctor.Email;
-            doctor.Phone = !string.IsNullOrEmpty(newdoctor.Phone) ? newdoctor.Phone : doctor.Phone;
+            doctor.Contact = !string.IsNullOrEmpty(newdoctor.Contact) ? newdoctor.Contact : doctor.Contact;
 
             await _context.SaveChangesAsync();
 

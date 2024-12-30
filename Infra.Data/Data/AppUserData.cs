@@ -41,13 +41,13 @@ public class AppUserData : IAppUserData
         {
 
             _logger.LogError(ex.Message);
-            return new ResponseDTO { Status = StatusResponseEnum.Error, Message = ex.Message };
+            throw;
 
         }
 
     }
 
-    public AppUser? GetUserById(Guid id)
+    public UserDTO? GetUserById(Guid id)
     {
 
         _logger.LogInformation($"Buscando usuário pelo id {id}");
@@ -62,12 +62,21 @@ public class AppUserData : IAppUserData
                 return null;
             }
 
-            return user;
+
+            var userReturn = new UserDTO()
+            {
+                Name = user.Name,
+                LastName = user.LastName,
+                Email = user.Email,
+                BirthDate = user.BirthDate,
+            };
+
+            return userReturn;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex.Message);
-            return null;
+            throw;
         }
 
     }
@@ -85,12 +94,13 @@ public class AppUserData : IAppUserData
                 return null;
             }
 
+
             return user;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex.Message);
-            return null;
+            throw;
         }
 
     }
@@ -113,9 +123,13 @@ public class AppUserData : IAppUserData
                 };
             }
 
-            user.IsActive = false;
+            var userDelete = new AppUser
+            {
+                IsActive = false
+            };
 
-            _context.Set<AppUser>().Update(user);
+            
+            _context.Set<AppUser>().Update(userDelete);
             await _context.SaveChangesAsync();
 
             return new ResponseDTO
@@ -127,11 +141,7 @@ public class AppUserData : IAppUserData
         catch (Exception ex)
         {
             _logger.LogError(ex.Message);
-            return new ResponseDTO
-            {
-                Status = StatusResponseEnum.Error,
-                Message = ex.Message
-            };
+            throw;
         }
 
 

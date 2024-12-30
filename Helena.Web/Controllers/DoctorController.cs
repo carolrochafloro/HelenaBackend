@@ -1,5 +1,7 @@
-﻿using Domain.Contracts.DTO;
+﻿using Domain.Contracts.DTO.AppUser;
+using Domain.Contracts.DTO.Doctor;
 using Domain.Entities;
+using Domain.Interfaces.Data;
 using Infra.Data.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,19 +17,17 @@ namespace Helena.Web.Controllers
     public class DoctorController : ControllerBase
     {
 
-        private readonly DoctorData _doctorData;
+        private readonly IDoctorData _doctorData;
 
-        public DoctorController(DoctorData doctorData)
+        public DoctorController(IDoctorData doctorData)
         {
             _doctorData = doctorData;
         }
 
         [Route("create")]
         [HttpPost]
-        public async Task<IActionResult> CreateDoctor([FromBody]NewDoctorDTO newDoctor)
+        public async Task<IActionResult> CreateDoctor([FromBody] NewDoctorDTO newDoctor)
         {
-            var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-            Guid.TryParse(userIdString, out Guid userId);
 
             try
             {
@@ -36,13 +36,17 @@ namespace Helena.Web.Controllers
                     return BadRequest("Os dados do médico devem ser enviados.");
                 }
 
+                if (!Guid.TryParse(newDoctor.UserId, out Guid userId))
+                {
+                    return BadRequest("ID de usuário inválido.");
+                }
+
                 var doctor = new Doctor
                 {
                     Name = newDoctor.Name,
                     Specialty = newDoctor.Specialty,
-                    Phone = newDoctor.Phone,
-                    Email = newDoctor.Email,
-                    UserId = userId,
+                    Contact = newDoctor.Contact,
+                    UserId = userId
                 };
 
                 var result = await _doctorData.CreateDoctorAsync(doctor);
@@ -51,18 +55,21 @@ namespace Helena.Web.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"Erro ao criar o médico: {ex.Message}");
             }
-
         }
 
         [Route("get")]
-        [HttpGet]
-        public IActionResult GetDoctors()
+        [HttpPost]
+        public IActionResult GetDoctors([FromBody] UserIdRequestDTO id)
 
         {
-            var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-            Guid.TryParse(userIdString, out Guid userId);
+            string stringId = id.UserId;
+
+            if (!Guid.TryParse(stringId, out Guid userId))
+            {
+                return BadRequest("ID de usuário inválido.");
+            }
 
             try
             {

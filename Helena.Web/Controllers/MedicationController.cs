@@ -1,4 +1,5 @@
-﻿using Domain.Contracts.DTO;
+﻿using Domain.Contracts.DTO.Medication;
+using Domain.Contracts.DTO.Requests_and_Responses;
 using Domain.Entities;
 using Domain.Interfaces.Business;
 using Domain.Interfaces.Data;
@@ -30,15 +31,17 @@ namespace Helena.Web.Controllers
         }
 
         [HttpGet]
-        [Route("get-all")]
-        public IActionResult GetAllMedications()
+        [Route("get/all/{userId}")]
+        public IActionResult GetAllMedications([FromRoute] Guid userId)
         {
-            var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-            Guid.TryParse(userIdString, out Guid userId);
 
             try
             {
                 var medications = _medData.GetAllMedications(userId);
+              foreach (var item in medications)
+                {
+                    _logger.LogDebug($"==== {item.Name} ====");
+                }
                 return Ok(medications);
             }
             catch (Exception ex)
@@ -64,14 +67,22 @@ namespace Helena.Web.Controllers
         }
 
         [HttpPost]
+        [Route("get/date")]
+        public IActionResult GetMedicationByDate([FromBody] MedicationByDayRequest request)
+        {
+            var medication = _medData.GetAllMedicationsByDate(request.Date, request.UserId);
+            return Ok(medication);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> NewMedication([FromBody] NewMedicationDTO newMedication)
         {
-            var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-            Guid.TryParse(userIdString, out Guid userId);
+
+            var result  = Guid.TryParse(newMedication.UserId, out Guid userId);
 
             try
             {
-                var medication = await _medBusiness.CreateMedicationWithTimes(newMedication, userId);
+                var medication = await _medBusiness.CreateMedicationWithTimes(newMedication,userId);
 
                 return Ok(medication);
             }
@@ -84,7 +95,7 @@ namespace Helena.Web.Controllers
 
         [HttpPut]
         [Route("update/{id}")]
-        public async Task<IActionResult> UpdateMedication([FromBody] NewMedicationDTO updateMedication, [FromRoute] Guid id)
+        public async Task<IActionResult> UpdateMedication([FromBody] UpdateMedDTO updateMedication, [FromRoute] Guid id)
         {
             try
             {

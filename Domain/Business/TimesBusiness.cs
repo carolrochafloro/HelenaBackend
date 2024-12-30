@@ -1,6 +1,7 @@
-﻿using Domain.Contracts.DTO;
+﻿using Domain.Contracts.DTO.Times;
 using Domain.Entities;
 using Domain.Interfaces.Business;
+using Domain.Interfaces.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,13 @@ using System.Threading.Tasks;
 namespace Domain.Business;
 public class TimesBusiness : ITimesBusiness
 {
+    private readonly ITimesData _timesData;
+
+    public TimesBusiness(ITimesData timesData)
+    {
+        _timesData = timesData;
+    }
+
     public List<Times> CreateDailyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times)
     {
 
@@ -44,6 +52,7 @@ public class TimesBusiness : ITimesBusiness
             }
         }
 
+        _timesData.CreateTimesAsync(newTimeList);
         return newTimeList;
 
     }
@@ -92,7 +101,7 @@ public class TimesBusiness : ITimesBusiness
             }
 
         }
-
+        _timesData.CreateTimesAsync(newTimes);
         return newTimes;
     }
 
@@ -152,7 +161,7 @@ public class TimesBusiness : ITimesBusiness
 
 
         }
-
+        _timesData.CreateTimesAsync(newTimes);
         return newTimes;
     }
 
@@ -206,7 +215,7 @@ public class TimesBusiness : ITimesBusiness
 
 
         }
-
+        _timesData.CreateTimesAsync(newTimes);
         return newTimes;
     }
 }

@@ -54,12 +54,22 @@ public class AppUserController : ControllerBase
                 LastName = register.LastName,
                 PasswordSalt = salt,
                 PasswordHash = hash,
-                BirthDate = register.BirthDate
+                BirthDate = (DateOnly)register.BirthDate
             };
 
             var save = await _appUserData.CreateUserAsync(newUser);
 
-            // salvar no db
+            if (save.Status == StatusResponseEnum.Success)
+            {
+                var jwt = _appUserBusiness.GenerateJwt(newUser);
+                return Ok(new JwtDTO
+                {
+                    Message = "Autenticado",
+                    Token = jwt
+                });
+            }
+
+
 
             return Ok(save.Message);
         }
@@ -99,13 +109,11 @@ public class AppUserController : ControllerBase
         });
     }
 
-    [Route("getprofile")]
+    [Route("{userId}")]
     [HttpGet]
     [Authorize]
-    public IActionResult GetLoggedUser()
+    public IActionResult GetLoggedUser([FromRoute] Guid userId)
     {
-        var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-        Guid.TryParse(userIdString, out Guid userId);
 
         try
         {

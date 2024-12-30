@@ -16,7 +16,7 @@ public class Medication : BaseEntity
     public string Type { get; set; }
     public string Dosage { get; set; }
     public string Notes { get; set; }
-    public string Img { get; set; }
+    public string Img { get; set; } = string.Empty;
     public DateOnly StartDate { get; set; }
     public DateOnly EndDate { get; set; }
     public FrequencyTypeEnum FrequencyType { get; set; }

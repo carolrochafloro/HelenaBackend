@@ -1,4 +1,4 @@
-﻿using Domain.Contracts.DTO;
+﻿using Domain.Contracts.DTO.Times;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;

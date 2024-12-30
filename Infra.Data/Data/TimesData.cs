@@ -24,12 +24,15 @@ namespace Infra.Data.Data
             _context = context;
         }
 
-        public async Task<ResponseDTO> CreateTimes(Times times)
+        public async Task<ResponseDTO> CreateTimesAsync(List<Times> times)
         {
             try
             {
 
-                await _context.Set<Times>().AddAsync(times);
+                foreach (var time in times)
+                {
+                    await _context.Set<Times>().AddAsync(time);
+                }
                 await _context.SaveChangesAsync();
 
                 return new ResponseDTO

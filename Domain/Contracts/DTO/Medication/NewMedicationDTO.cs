@@ -1,4 +1,5 @@
-﻿using Domain.Contracts.Enum;
+﻿using Domain.Contracts.DTO.Times;
+using Domain.Contracts.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Contracts.DTO;
+namespace Domain.Contracts.DTO.Medication;
 public class NewMedicationDTO
 {
     [Required]
@@ -16,16 +17,17 @@ public class NewMedicationDTO
     [Required]
     public string Dosage { get; set; }
     public string Notes { get; set; }
-    public string IndicatedFor { get; set; }
+    public string IndicatedFor { get; set; } = string.Empty;
     [Required]
-    public DateOnly StartDate { get; set; }
+    public string Start { get; set; }
     [Required]
-    public DateOnly EndDate { get; set; }
+    public string End { get; set; }
     [Required]
     public FrequencyTypeEnum FrequencyType { get; set; }
     [Required]
     public int Recurrency { get; set; }
     [Required]
-    public Guid DoctorId { get; set; }
+    public string DoctorId { get; set; }
+    public string UserId { get; set; }
     public List<NewTimeDTO> Times { get; set; }
 }

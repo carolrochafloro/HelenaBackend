@@ -8,7 +8,6 @@ public class RegisterDTO
     [Required(ErrorMessage = "O nome é obrigatório.")]
     public string Name { get; set; }
 
-    [Required(ErrorMessage = "O sobrenome é obrigatório.")]
     public string LastName { get; set; }
 
     [EmailAddress]
