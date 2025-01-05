@@ -55,27 +55,26 @@ public class MedicationBusiness : IMedicationBusiness
         List<NewTimeDTO> newMedTimes = newMedication.Times;
         List<Times> timesToAdd = new List<Times>();
 
+        await _medData.CreateMedicationAsync(medication);
 
         switch (newMedication.FrequencyType)
         {
             case FrequencyTypeEnum.Daily:
-                timesToAdd = _timesBusiness.CreateDailyTimes(medication.Id, medication.StartDate, medication.EndDate, newMedTimes);
+                timesToAdd = await _timesBusiness.CreateDailyTimes(medication.Id, medication.StartDate, medication.EndDate, newMedTimes);
                 break;
 
             case FrequencyTypeEnum.Weekly:
-                timesToAdd = _timesBusiness.CreateWeeklyTimes(medication.Id, medication.StartDate, medication.EndDate, newMedTimes);
+                timesToAdd = await _timesBusiness.CreateWeeklyTimes(medication.Id, medication.StartDate, medication.EndDate, newMedTimes);
                 break;
 
             case FrequencyTypeEnum.Monthly:
-                timesToAdd = _timesBusiness.CreateMonthlyTimes(medication.Id, medication.StartDate, medication.EndDate, newMedTimes);
+                timesToAdd = await _timesBusiness.CreateMonthlyTimes(medication.Id, medication.StartDate, medication.EndDate, newMedTimes);
                 break;
 
             case FrequencyTypeEnum.Yearly:
-                timesToAdd = _timesBusiness.CreateMonthlyTimes(medication.Id, medication.StartDate, medication.EndDate, newMedTimes);
+                timesToAdd = await _timesBusiness.CreateYearlyTimes(medication.Id, medication.StartDate, medication.EndDate, newMedTimes);
                 break;
         }
-
-        await _medData.CreateMedicationAsync(medication);
 
         return medication;
     }

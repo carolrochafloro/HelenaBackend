@@ -2,11 +2,6 @@
 using Domain.Entities;
 using Domain.Interfaces.Business;
 using Domain.Interfaces.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Business;
 public class TimesBusiness : ITimesBusiness
@@ -18,7 +13,7 @@ public class TimesBusiness : ITimesBusiness
         _timesData = timesData;
     }
 
-    public List<Times> CreateDailyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times)
+    public async Task<List<Times>> CreateDailyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times)
     {
 
         List<Times> newTimeList = new List<Times>();
@@ -34,7 +29,6 @@ public class TimesBusiness : ITimesBusiness
                 {
                     TimeOnly convertedNewTime = TimeOnly.Parse(time);
                     DateTime correctDateTime = currentDay.ToDateTime(convertedNewTime);
-
                     correctDateTime = DateTime.SpecifyKind(correctDateTime, DateTimeKind.Utc);
 
                     Times newTime = new Times()
@@ -52,12 +46,12 @@ public class TimesBusiness : ITimesBusiness
             }
         }
 
-        _timesData.CreateTimesAsync(newTimeList);
+        await _timesData.CreateTimesAsync(newTimeList);
         return newTimeList;
 
     }
 
-    public List<Times> CreateWeeklyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times)
+    public async Task<List<Times>> CreateWeeklyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times)
     {
         List<Times> newTimes = new List<Times>();
         int timeDifference = end.DayNumber - start.DayNumber + 1;
@@ -78,12 +72,12 @@ public class TimesBusiness : ITimesBusiness
                         TimeOnly convertedNewTime = TimeOnly.Parse(item1);
                         DateTime correctDateTime = currentDay.ToDateTime(convertedNewTime);
 
-                        if (correctDateTime.Year > 2026)
+                        if (correctDateTime.Year > 2030)
                         {
                             break;
                         }
 
-                        correctDateTime = DateTime.SpecifyKind(correctDateTime, DateTimeKind.Utc);
+                        //correctDateTime = DateTime.SpecifyKind(correctDateTime, DateTimeKind.Utc);
 
                         var timeToAdd = new Times()
                         {
@@ -101,11 +95,11 @@ public class TimesBusiness : ITimesBusiness
             }
 
         }
-        _timesData.CreateTimesAsync(newTimes);
+        await _timesData.CreateTimesAsync(newTimes);
         return newTimes;
     }
 
-    public List<Times> CreateMonthlyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times)
+    public async Task<List<Times>> CreateMonthlyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times)
     {
 
         List<Times> newTimes = new List<Times>();
@@ -134,7 +128,7 @@ public class TimesBusiness : ITimesBusiness
                             break;
                         }
 
-                        if (theDate.Year > 2026)
+                        if (theDate.Year > 2030)
                         {
 
                             break;
@@ -142,7 +136,7 @@ public class TimesBusiness : ITimesBusiness
 
 
                         DateTime correctDate = item.ToDateTime(convertedTime);
-                        correctDate = DateTime.SpecifyKind(correctDate, DateTimeKind.Utc);
+                        //correctDate = DateTime.SpecifyKind(correctDate, DateTimeKind.Utc);
 
                         var timeToAdd = new Times
                         {
@@ -161,11 +155,11 @@ public class TimesBusiness : ITimesBusiness
 
 
         }
-        _timesData.CreateTimesAsync(newTimes);
+        await _timesData.CreateTimesAsync(newTimes);
         return newTimes;
     }
 
-    public List<Times> CreateYearlyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times)
+    public async Task<List<Times>> CreateYearlyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times)
     {
         var newTimes = new List<Times>();
         int timeInterval = end.DayNumber - start.DayNumber + 1;
@@ -196,7 +190,7 @@ public class TimesBusiness : ITimesBusiness
 
 
                         DateTime correctDate = theDate.ToDateTime(convertedTime);
-                        correctDate = DateTime.SpecifyKind(correctDate, DateTimeKind.Utc);
+                        //correctDate = DateTime.SpecifyKind(correctDate, DateTimeKind.Utc);
 
                         var timeToAdd = new Times
                         {
@@ -215,7 +209,7 @@ public class TimesBusiness : ITimesBusiness
 
 
         }
-        _timesData.CreateTimesAsync(newTimes);
+        await _timesData.CreateTimesAsync(newTimes);
         return newTimes;
     }
 }

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace Domain.Interfaces.Business;
 public interface ITimesBusiness
 {
-    List<Times> CreateDailyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times);
-    List<Times> CreateWeeklyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times);
-    List<Times> CreateMonthlyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times);
-    List<Times> CreateYearlyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times);
+    Task<List<Times>> CreateDailyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times);
+    Task<List<Times>> CreateWeeklyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times);
+    Task<List<Times>> CreateMonthlyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times);
+    Task<List<Times>> CreateYearlyTimes(Guid medId, DateOnly start, DateOnly end, List<NewTimeDTO> times);
 
 }

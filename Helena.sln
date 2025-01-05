@@ -15,7 +15,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{11E116
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{7AF1CCAF-AAC4-4B2F-AB6E-243F8AF4EA31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helena.Tests", "Helena.Tests\Helena.Tests.csproj", "{4641E939-A415-4F51-B5FD-E84B18F716B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helena.Tests", "Helena.Tests\Helena.Tests.csproj", "{4641E939-A415-4F51-B5FD-E84B18F716B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens de Solução", "{2965247E-A438-45F7-9EEA-C9C6ABEC0FA5}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

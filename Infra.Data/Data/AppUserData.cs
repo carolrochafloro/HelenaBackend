@@ -147,11 +147,11 @@ public class AppUserData : IAppUserData
 
     }
 
-    public async Task<ResponseDTO> UpdateUserAsync(RegisterDTO user, Guid id)
+    public async Task<ResponseDTO> UpdateUserAsync(UpdateUserDTO user, Guid id)
     {
         try
         {
-            var currentUser = await _context.Set<AppUser>().Where(u => u.Id == id).FirstOrDefaultAsync();
+            var currentUser = _context.Set<AppUser>().Where(u => u.Id == id).FirstOrDefault();
 
             currentUser.Name = !string.IsNullOrEmpty(user.Name) ? user.Name : currentUser.Name;
             currentUser.LastName = !string.IsNullOrEmpty(user.LastName) ? user.LastName : currentUser.LastName;

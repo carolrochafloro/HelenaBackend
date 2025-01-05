@@ -14,6 +14,6 @@ public interface IAppUserData
     UserDTO? GetUserById(Guid id);
     AppUser? GetUser(string email);
     Task<ResponseDTO> DeleteUserAsync(Guid id);
-    Task<ResponseDTO> UpdateUserAsync(RegisterDTO user, Guid id);
+    Task<ResponseDTO> UpdateUserAsync(UpdateUserDTO user, Guid id);
 
 }

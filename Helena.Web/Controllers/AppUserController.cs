@@ -117,6 +117,7 @@ public class AppUserController : ControllerBase
 
         try
         {
+            _logger.LogInformation("Buscando usuário!");
             var user = _appUserData.GetUserById(userId);
 
             if (user is null)
@@ -157,15 +158,14 @@ public class AppUserController : ControllerBase
     }
 
     [HttpPut]
+    [Route("{userId}")]
     [Authorize]
 
-    public async Task<IActionResult> UpdateProfile([FromBody] RegisterDTO updateUser)
+    public async Task<IActionResult> UpdateProfile([FromRoute] Guid userId, [FromBody] UpdateUserDTO updateUser)
     {
-        var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-        Guid.TryParse(userIdString, out Guid userId);
-
         try
         {
+            _logger.LogInformation("Atualizando usuário.");
             var response = await _appUserData.UpdateUserAsync(updateUser, userId);
             return Ok(response.Message);
 
