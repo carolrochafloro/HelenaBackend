@@ -133,17 +133,9 @@ namespace Helena.Web.Controllers
         public async Task<IActionResult> DeleteDoctor([FromRoute] Guid doctorId)
         {
 
-            var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-            Guid.TryParse(userIdString, out Guid userId);
-
             try
             {
                 var doctor = _doctorData.GetDoctorById(doctorId);
-
-                if (doctor.UserId != userId)
-                {
-                    return Unauthorized("Médico não foi cadastrado por esse usuário");
-                }
 
                 var response = await _doctorData.DeleteDoctorAsync(doctorId);
 

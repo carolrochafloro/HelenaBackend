@@ -34,7 +34,7 @@ public class DoctorData : IDoctorData
 
             return new ResponseDTO
             {
-                Status = Domain.Contracts.Enum.StatusResponseEnum.Success,
+                Status = true,
                 Message = "Médico cadastrado com sucesso."
             };
         }
@@ -56,7 +56,7 @@ public class DoctorData : IDoctorData
             {
                 return new ResponseDTO
                 {
-                    Status = Domain.Contracts.Enum.StatusResponseEnum.Error,
+                    Status = false,
                     Message = "Médico não encontrado"
                 };
             }
@@ -66,7 +66,7 @@ public class DoctorData : IDoctorData
 
             return new ResponseDTO
             {
-                Status = Domain.Contracts.Enum.StatusResponseEnum.Success,
+                Status = false,
                 Message = "Médico removido com sucesso."
             };
         }
@@ -139,7 +139,7 @@ public class DoctorData : IDoctorData
             {
                 return new ResponseDTO
                 {
-                    Status = Domain.Contracts.Enum.StatusResponseEnum.Error,
+                    Status = false,
                     Message = "Médico não encontrado"
                 };
             }
@@ -152,7 +152,7 @@ public class DoctorData : IDoctorData
 
             return new ResponseDTO
             {
-                Status = Domain.Contracts.Enum.StatusResponseEnum.Success,
+                Status = true,
                 Message = "Cadastro do médico atualizado com sucesso."
             };
 

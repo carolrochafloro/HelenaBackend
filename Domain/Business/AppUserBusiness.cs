@@ -3,17 +3,11 @@ using Domain.Contracts.DTO.AppUser;
 using Domain.Entities;
 using Domain.Interfaces.Business;
 using Domain.Interfaces.Data;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Business;
 public class AppUserBusiness : IAppUserBusiness
@@ -62,13 +56,13 @@ public class AppUserBusiness : IAppUserBusiness
 
     public (ResponseDTO, AppUser?) Authenticate(LoginDTO login)
     {
-        var user = _appUserData.GetUser(login.Email);
+        var user = _appUserData.GetUserByEmail(login.Email);
 
         if (user is null)
         {
             return (new ResponseDTO
             {
-                Status = Contracts.Enum.StatusResponseEnum.Error,
+                Status = false,
                 Message = "Usuário não encontrado."
             }, null);
         }
@@ -77,7 +71,7 @@ public class AppUserBusiness : IAppUserBusiness
         {
             return (new ResponseDTO
             {
-                Status = Contracts.Enum.StatusResponseEnum.Error,
+                Status = false,
                 Message = "Usuário ou senha inválidos."
             }, null);
         }
@@ -86,14 +80,14 @@ public class AppUserBusiness : IAppUserBusiness
         {
             return (new ResponseDTO
             {
-                Status = Contracts.Enum.StatusResponseEnum.Error,
+                Status = false,
                 Message = "Usuário inativo."
             }, null);
         }
 
         return (new ResponseDTO
         {
-            Status = Contracts.Enum.StatusResponseEnum.Success,
+            Status = true,
             Message = "Usuário autenticado."
         }, user);
     }

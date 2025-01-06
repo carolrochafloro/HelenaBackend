@@ -35,7 +35,7 @@ public class AppUserData : IAppUserData
             await _context.Set<AppUser>().AddAsync(user);
             await _context.SaveChangesAsync();
 
-            return new ResponseDTO { Status = StatusResponseEnum.Success, Message = $"Usuário {user.Id} - {user.Email} criado com sucesso." };
+            return new ResponseDTO { Status = true, Message = $"Usuário {user.Id} - {user.Email} criado com sucesso." };
         }
         catch (Exception ex)
         {
@@ -46,8 +46,7 @@ public class AppUserData : IAppUserData
         }
 
     }
-
-    public UserDTO? GetUserById(Guid id)
+    public AppUser? GetUserById(Guid id)
     {
 
         _logger.LogInformation($"Buscando usuário pelo id {id}");
@@ -62,16 +61,7 @@ public class AppUserData : IAppUserData
                 return null;
             }
 
-
-            var userReturn = new UserDTO()
-            {
-                Name = user.Name,
-                LastName = user.LastName,
-                Email = user.Email,
-                BirthDate = user.BirthDate,
-            };
-
-            return userReturn;
+            return user;
         }
         catch (Exception ex)
         {
@@ -80,20 +70,17 @@ public class AppUserData : IAppUserData
         }
 
     }
-
-    public AppUser? GetUser(string email)
+    public AppUser? GetUserByEmail(string email)
     {
 
         try
         {
-
             var user = _context.Set<AppUser>().FirstOrDefault(u => u.Email == email);
 
             if (user is null)
             {
                 return null;
             }
-
 
             return user;
         }
@@ -104,7 +91,6 @@ public class AppUserData : IAppUserData
         }
 
     }
-
     public async Task<ResponseDTO> DeleteUserAsync(Guid id)
     {
 
@@ -112,29 +98,27 @@ public class AppUserData : IAppUserData
 
         try
         {
+            _logger.LogInformation("Deletando usuário.");
+
             var user = GetUserById(id);
+
+            _logger.LogInformation($"Usuário encontrado: {user.Email}");
 
             if (user is null)
             {
                 return new ResponseDTO
                 {
-                    Status = StatusResponseEnum.Error,
+                    Status = false,
                     Message = $"Usuário com id {id} não encontrado."
                 };
             }
-
-            var userDelete = new AppUser
-            {
-                IsActive = false
-            };
-
             
-            _context.Set<AppUser>().Update(userDelete);
+            _context.Set<AppUser>().Remove(user);
             await _context.SaveChangesAsync();
 
             return new ResponseDTO
             {
-                Status = StatusResponseEnum.Success,
+                Status = true,
                 Message = $"Usuário com id {id} deletado."
             };
         }
@@ -162,7 +146,7 @@ public class AppUserData : IAppUserData
 
             return new ResponseDTO
             {
-                Status = StatusResponseEnum.Success,
+                Status = true,
                 Message = "Usuário atualizado com sucesso."
             };
 

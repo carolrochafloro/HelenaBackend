@@ -37,7 +37,7 @@ namespace Infra.Data.Data
 
                 return new ResponseDTO
                 {
-                    Status = Domain.Contracts.Enum.StatusResponseEnum.Success,
+                    Status = true,
                     Message = "Horários adicionados"
                 };
 

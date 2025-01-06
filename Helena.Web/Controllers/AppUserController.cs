@@ -31,16 +31,19 @@ public class AppUserController : ControllerBase
 
     [Route("register")]
     [HttpPost]
-
     public async Task<IActionResult> Register([FromBody] RegisterDTO register)
     {
         try
         {
-            var user = _appUserData.GetUser(register.Email);
+            var user = _appUserData.GetUserByEmail(register.Email);
 
             if (user is not null)
             {
-                return BadRequest("O e-mail já está registrado.");
+                return Ok(new ResponseDTO
+                {
+                    Status = false,
+                    Message = "Usuário já cadastrado."
+                });
             }
 
             var salt = _appUserBusiness.SaltGenerator();
@@ -59,27 +62,32 @@ public class AppUserController : ControllerBase
 
             var save = await _appUserData.CreateUserAsync(newUser);
 
-            if (save.Status == StatusResponseEnum.Success)
+            if (save.Status)
             {
                 var jwt = _appUserBusiness.GenerateJwt(newUser);
-                return Ok(new JwtDTO
+
+                return Ok(new ResponseDTO
                 {
-                    Message = "Autenticado",
-                    Token = jwt
+                    Status = true,
+                    Message = jwt
                 });
             }
 
-
-
-            return Ok(save.Message);
+            return Ok(new ResponseDTO
+            {
+                Status = true,
+                Message = "Usuário cadastrado."
+            });
         }
 
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new ResponseDTO
+            {
+                Status = false,
+                Message = ex.Message,
+            });
         }
-
-
     }
 
     [Route("login")]
@@ -90,22 +98,30 @@ public class AppUserController : ControllerBase
 
         var result = _appUserBusiness.Authenticate(login);
 
-        if (result.Item1.Status == StatusResponseEnum.Error)
+        if (result.Item1.Status == false)
         {
-            return Unauthorized("Usuário não autorizado.");
+            return Ok(new ResponseDTO
+            {
+                Status = false,
+                Message = result.Item1.Message
+            });
         }
 
         if (result.Item1 is null || result.Item2 is null)
         {
-            return BadRequest("Erro do servidor");
+            return BadRequest(new ResponseDTO
+            {
+                Status = false,
+                Message = "Erro no servidor. Tente novamente mais tarde."
+            });
         }
 
         var jwt = _appUserBusiness.GenerateJwt(result.Item2);
 
-        return Ok(new JwtDTO
+        return Ok(new ResponseDTO
         {
-            Token = jwt,
-            Message = result.Item1.Message,
+            Status = true,
+            Message = jwt
         });
     }
 
@@ -135,40 +151,33 @@ public class AppUserController : ControllerBase
         }
     }
 
+    [Route("{userId}")]
     [HttpDelete]
     [Authorize]
-
-    public async Task<IActionResult> DeleteProfile()
+    public async Task<IActionResult> DeleteProfile([FromRoute] Guid userId)
     {
-        var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-        Guid.TryParse(userIdString, out Guid userId);
-
         try
         {
             var response = await _appUserData.DeleteUserAsync(userId);
-
-            return Ok(response.Message);
+            return Ok(response);
         }
 
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }
-
     }
 
     [HttpPut]
     [Route("{userId}")]
     [Authorize]
-
     public async Task<IActionResult> UpdateProfile([FromRoute] Guid userId, [FromBody] UpdateUserDTO updateUser)
     {
         try
         {
             _logger.LogInformation("Atualizando usuário.");
             var response = await _appUserData.UpdateUserAsync(updateUser, userId);
-            return Ok(response.Message);
-
+            return Ok(response);
         }
 
         catch (Exception ex)

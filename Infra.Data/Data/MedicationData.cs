@@ -36,7 +36,7 @@ public class MedicationData : IMedicationData
 
             return new ResponseDTO
             {
-                Status = Domain.Contracts.Enum.StatusResponseEnum.Success,
+                Status = true,
                 Message = "Medicamento criado com sucesso"
             };
 
@@ -59,7 +59,7 @@ public class MedicationData : IMedicationData
             {
                 return new ResponseDTO
                 {
-                    Status = Domain.Contracts.Enum.StatusResponseEnum.Error,
+                    Status = false,
                     Message = "Medicamento não encontrado."
                 };
             }
@@ -69,7 +69,7 @@ public class MedicationData : IMedicationData
 
             return new ResponseDTO
             {
-                Status = Domain.Contracts.Enum.StatusResponseEnum.Success,
+                Status = true,
                 Message = "Medicamento deletado com sucesso."
             };
         }
@@ -124,7 +124,7 @@ public class MedicationData : IMedicationData
                             Times = g.Select(x => new TimeDTO
                             {
                                 Id = x.time.Id,
-                                DateTime = x.time.DateTime,
+                                DateTime = x.time.DateTime.ToLocalTime(),
                                 IsTaken = x.time.IsTaken,
                             }).OrderBy(t => t.DateTime).ToList()
                         };
@@ -184,6 +184,7 @@ public class MedicationData : IMedicationData
                             IndicatedFor = g.Key.IndicatedFor,
                             Times = g.Select(x => new TimeDTO
                             {
+                                Id = x.time.Id,
                                 DateTime = x.time.DateTime,
                                 IsTaken = x.time.IsTaken,
                             }).OrderBy(t => t.DateTime).ToList()
@@ -213,7 +214,7 @@ public class MedicationData : IMedicationData
             {
                 return new ResponseDTO
                 {
-                    Status = Domain.Contracts.Enum.StatusResponseEnum.Error,
+                    Status = false,
                     Message = "Medicamento não encontrado"
                 };
             }
@@ -232,7 +233,7 @@ public class MedicationData : IMedicationData
 
             return new ResponseDTO
             {
-                Status = Domain.Contracts.Enum.StatusResponseEnum.Success,
+                Status = true,
                 Message = "Medicamento atualizado com sucesso."
             };
 
@@ -248,6 +249,7 @@ public class MedicationData : IMedicationData
     public List<DayMedicationDTO> GetAllMedicationsByDate(DateOnly date, Guid userId)
     {
         _logger.LogInformation("Buscando medicamentos para o dashboard");
+
 
         var medicationList = _context.Medications
         .Where(m => m.UserId == userId && _context.Times.Any(t => t.MedicationId == m.Id && t.DateTime.Date == date.ToDateTime(TimeOnly.MinValue).ToUniversalTime().Date))

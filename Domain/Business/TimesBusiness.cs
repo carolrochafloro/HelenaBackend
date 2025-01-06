@@ -31,6 +31,8 @@ public class TimesBusiness : ITimesBusiness
                     DateTime correctDateTime = currentDay.ToDateTime(convertedNewTime);
                     correctDateTime = DateTime.SpecifyKind(correctDateTime, DateTimeKind.Utc);
 
+                    Console.WriteLine($"==== {correctDateTime} ====");
+
                     Times newTime = new Times()
                     {
 
@@ -77,7 +79,7 @@ public class TimesBusiness : ITimesBusiness
                             break;
                         }
 
-                        //correctDateTime = DateTime.SpecifyKind(correctDateTime, DateTimeKind.Utc);
+                        correctDateTime = DateTime.SpecifyKind(correctDateTime, DateTimeKind.Utc);
 
                         var timeToAdd = new Times()
                         {
@@ -136,7 +138,7 @@ public class TimesBusiness : ITimesBusiness
 
 
                         DateTime correctDate = item.ToDateTime(convertedTime);
-                        //correctDate = DateTime.SpecifyKind(correctDate, DateTimeKind.Utc);
+                        correctDate = DateTime.SpecifyKind(correctDate, DateTimeKind.Utc);
 
                         var timeToAdd = new Times
                         {
@@ -190,7 +192,7 @@ public class TimesBusiness : ITimesBusiness
 
 
                         DateTime correctDate = theDate.ToDateTime(convertedTime);
-                        //correctDate = DateTime.SpecifyKind(correctDate, DateTimeKind.Utc);
+                        correctDate = DateTime.SpecifyKind(correctDate, DateTimeKind.Utc);
 
                         var timeToAdd = new Times
                         {

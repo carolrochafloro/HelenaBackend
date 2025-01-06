@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 namespace Domain.Contracts.DTO;
 public class ResponseDTO
 {
-    public StatusResponseEnum Status { get; set; }
-    public string Message { get; set; }
+    public bool Status { get; set; }
+    public string? Message { get; set; }
 }
