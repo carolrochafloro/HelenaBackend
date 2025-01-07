@@ -88,20 +88,11 @@ namespace Helena.Web.Controllers
         [HttpGet]
         public IActionResult GetDoctorById([FromRoute] Guid doctorId)
         {
-            var userIdString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-            Guid.TryParse(userIdString, out Guid userId);
-
             try
             {
                 var doctor = _doctorData.GetDoctorById(doctorId);
 
-                if (doctor.UserId != userId)
-                {
-                    return Unauthorized("Médico não foi cadastrado por esse usuário");
-                }
-
                 return Ok(doctor);
-
             }
             catch (Exception ex)
             {
@@ -115,11 +106,9 @@ namespace Helena.Web.Controllers
         {
             try
             {
-
                 var response = await _doctorData.UpdateDoctorAsync(doctorId, doctor);
 
                 return Ok(response);
-
             }
             catch (Exception ex)
             {
@@ -132,7 +121,6 @@ namespace Helena.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteDoctor([FromRoute] Guid doctorId)
         {
-
             try
             {
                 var doctor = _doctorData.GetDoctorById(doctorId);
@@ -140,7 +128,6 @@ namespace Helena.Web.Controllers
                 var response = await _doctorData.DeleteDoctorAsync(doctorId);
 
                 return Ok(response);
-
             }
             catch (Exception ex)
             {

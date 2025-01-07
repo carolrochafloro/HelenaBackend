@@ -124,7 +124,7 @@ public class MedicationData : IMedicationData
                             Times = g.Select(x => new TimeDTO
                             {
                                 Id = x.time.Id,
-                                DateTime = x.time.DateTime.ToLocalTime(),
+                                DateTime = x.time.DateTime,
                                 IsTaken = x.time.IsTaken,
                             }).OrderBy(t => t.DateTime).ToList()
                         };
@@ -265,7 +265,7 @@ public class MedicationData : IMedicationData
                         .Select(t => new TimeDTO
                         {
                             Id = t.Id,
-                            DateTime = t.DateTime.ToLocalTime(),
+                            DateTime = t.DateTime,
                             IsTaken = t.IsTaken
                         }).ToList()
         });
