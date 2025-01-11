@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", builder =>
     {
-        builder.WithOrigins("https://www.helenamed.com.br/")
+        builder.WithOrigins("https://www.helenamed.com.br/", "https://helena-frontend-coral.vercel.app/")
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
