@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  helena-web:
+    image: helena-web
+    build:
+      context: .
+      dockerfile: Helena.Web/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Database=helena_novo;Username=postgres;Password=1234
+    command: >
+      sh -c "dotnet ef database update --project ./Helena.Web/Helena.Web.csproj && dotnet Helena.Web.dll"
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: helena_novo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
