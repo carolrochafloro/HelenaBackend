@@ -27,4 +27,5 @@ RUN dotnet publish "./Helena.Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN dotnet ef database update --project ./Helena.Web/Helena.Web.csproj
 ENTRYPOINT ["dotnet", "Helena.Web.dll"]
