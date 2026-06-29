@@ -14,8 +14,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=db;Database=helena_novo;Username=postgres;Password=1234
-    command: >
-      sh -c "dotnet ef database update --project ./Helena.Web/Helena.Web.csproj && dotnet Helena.Web.dll"
 
   db:
     image: postgres:latest

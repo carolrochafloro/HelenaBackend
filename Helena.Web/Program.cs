@@ -53,11 +53,11 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
-    // Definir o esquema de segurança
+    // Definir o esquema de seguranï¿½a
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
-        Description = "Por favor, insira 'Bearer' [espaço] e o token JWT",
+        Description = "Por favor, insira 'Bearer' [espaï¿½o] e o token JWT",
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
@@ -95,6 +95,13 @@ builder.Services.AddScoped<IDoctorData, DoctorData>();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+// Apply EF Core migrations automatically at startup.
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<Context>();
+    context.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
