@@ -80,7 +80,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddDbContext<Context>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Infra.Data"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DATABASE_URL"), b => b.MigrationsAssembly("Infra.Data"));
 });
 
 builder.Services.AddScoped<IAppUserBusiness, AppUserBusiness>();
