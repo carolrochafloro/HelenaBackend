@@ -170,8 +170,6 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-await MigrateDatabaseAsync(app.Services, app.Logger);
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -192,32 +190,3 @@ app.UseCookiePolicy();
 app.MapControllers();
 
 await app.RunAsync();
-
-static async Task MigrateDatabaseAsync(IServiceProvider services, ILogger logger)
-{
-    const int maxAttempts = 5;
-    var delay = TimeSpan.FromSeconds(5);
-
-    for (var attempt = 1; attempt <= maxAttempts; attempt++)
-    {
-        try
-        {
-            using var scope = services.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<Context>();
-            logger.LogInformation("Applying database migrations (attempt {Attempt}/{MaxAttempts})...", attempt, maxAttempts);
-            context.Database.Migrate();
-            logger.LogInformation("Database migrations applied successfully.");
-            return;
-        }
-        catch (Exception ex) when (attempt < maxAttempts)
-        {
-            logger.LogWarning(ex, "Migration attempt {Attempt}/{MaxAttempts} failed. Retrying in {DelaySeconds}s...", attempt, maxAttempts, delay.TotalSeconds);
-            await Task.Delay(delay);
-        }
-    }
-
-    // Final attempt to surface the real exception.
-    using var finalScope = services.CreateScope();
-    var finalContext = finalScope.ServiceProvider.GetRequiredService<Context>();
-    finalContext.Database.Migrate();
-}
