@@ -80,9 +80,13 @@ builder.Services.AddSwaggerGen(c =>
             }
         });
 });
+var connectionString = builder.Configuration["DATABASE_URL"]
+    ?? builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? builder.Configuration["ConnectionStrings:DefaultConnection"];
+
 builder.Services.AddDbContext<Context>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DATABASE_URL"), b => b.MigrationsAssembly("Infra.Data"));
+    options.UseNpgsql(connectionString, b => b.MigrationsAssembly("Infra.Data"));
 });
 
 builder.Services.AddScoped<IAppUserBusiness, AppUserBusiness>();
