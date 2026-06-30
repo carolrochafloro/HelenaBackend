@@ -96,25 +96,6 @@ if (string.IsNullOrWhiteSpace(connectionString))
         "Connection string is not configured. Set ConnectionStrings__DefaultConnection or DATABASE_URL.");
 }
 
-// Convert PostgreSQL URI format to Npgsql connection string format if needed
-if (connectionString.StartsWith("postgresql://") || connectionString.StartsWith("postgres://"))
-{
-    var uri = new Uri(connectionString);
-    var userInfo = uri.UserInfo.Split(new[] { ':' }, 2); // Split on first ':' only
-    var username = userInfo[0];
-    var password = userInfo.Length > 1 ? userInfo[1] : string.Empty;
-
-    var builder_cs = new NpgsqlConnectionStringBuilder
-    {
-        Host = uri.Host,
-        Port = uri.Port == -1 ? 5432 : uri.Port,
-        Username = username,
-        Password = password,
-        Database = uri.LocalPath.TrimStart('/')
-    };
-    connectionString = builder_cs.ConnectionString;
-}
-
 builder.Services.AddDbContext<Context>(options =>
 {
     options.UseNpgsql(connectionString, b => b.MigrationsAssembly("Infra.Data"));
