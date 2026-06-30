@@ -84,6 +84,18 @@ var connectionString = builder.Configuration["DATABASE_URL"]
     ?? builder.Configuration.GetConnectionString("DefaultConnection")
     ?? builder.Configuration["ConnectionStrings:DefaultConnection"];
 
+// DEBUG: Log the connection string to see what value is actually being used
+Console.WriteLine($"DEBUG: CONNECTION STRING = '{connectionString}'");
+Console.WriteLine($"DEBUG: CONNECTION STRING LENGTH = {connectionString?.Length ?? 0}");
+Console.WriteLine($"DEBUG: CONNECTION STRING IS NULL = {connectionString == null}");
+Console.WriteLine($"DEBUG: CONNECTION STRING IS EMPTY = {string.IsNullOrWhiteSpace(connectionString)}");
+
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException(
+        "Connection string is not configured. Set ConnectionStrings__DefaultConnection or DATABASE_URL.");
+}
+
 builder.Services.AddDbContext<Context>(options =>
 {
     options.UseNpgsql(connectionString, b => b.MigrationsAssembly("Infra.Data"));
