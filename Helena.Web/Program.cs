@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,16 +85,25 @@ var connectionString = builder.Configuration["DATABASE_URL"]
     ?? builder.Configuration.GetConnectionString("DefaultConnection")
     ?? builder.Configuration["ConnectionStrings:DefaultConnection"];
 
-// DEBUG: Log the connection string to see what value is actually being used
-Console.WriteLine($"DEBUG: CONNECTION STRING = '{connectionString}'");
-Console.WriteLine($"DEBUG: CONNECTION STRING LENGTH = {connectionString?.Length ?? 0}");
-Console.WriteLine($"DEBUG: CONNECTION STRING IS NULL = {connectionString == null}");
-Console.WriteLine($"DEBUG: CONNECTION STRING IS EMPTY = {string.IsNullOrWhiteSpace(connectionString)}");
-
 if (string.IsNullOrWhiteSpace(connectionString))
 {
     throw new InvalidOperationException(
         "Connection string is not configured. Set ConnectionStrings__DefaultConnection or DATABASE_URL.");
+}
+
+// Convert PostgreSQL URI format to Npgsql connection string format if needed
+if (connectionString.StartsWith("postgresql://") || connectionString.StartsWith("postgres://"))
+{
+    var uri = new Uri(connectionString);
+    var builder_cs = new NpgsqlConnectionStringBuilder
+    {
+        Host = uri.Host,
+        Port = uri.Port == -1 ? 5432 : uri.Port,
+        Username = uri.UserInfo.Split(':')[0],
+        Password = uri.UserInfo.Split(':')[1],
+        Database = uri.LocalPath.TrimStart('/')
+    };
+    connectionString = builder_cs.ConnectionString;
 }
 
 builder.Services.AddDbContext<Context>(options =>
